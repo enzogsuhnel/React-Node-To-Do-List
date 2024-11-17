@@ -28,26 +28,21 @@
   box-shadow: 1px 3px 5px #28cb8b;
 
   & button {
-    border-radius: 5px;
-    background-color: #28cb8b;
-    height: 40px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background-color: var(--primary);
+    color: #fff;
+    background-color: var(--primary);
     border: none;
-    font-weight: bold;
+    border-radius: 5px;
     cursor: pointer;
-  }
-  & button:hover {
-    opacity: 0.8;
+    transition: background-color 0.3s;
+
+    & button:hover {
+      background-color: #1e9767;
+    }
   }
 
-  & input {
-    border: 2px solid #28cb8b;
-    border-radius: 5px;
-    height: 40px;
-    background-color: #d4fdd8;
-    color: #3f3f3f;
-    font: 16px;
-    padding-left: 10px;
-  }
 }
 .user-card {
   display: flex;

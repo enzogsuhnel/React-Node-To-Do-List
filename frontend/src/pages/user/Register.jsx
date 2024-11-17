@@ -1,9 +1,9 @@
 import { useState } from "react";
-import api from "../../../services/api";
-import "./homeStyle.css";
+import api from "../../services/api";
+import "./style.css";
 import { useNavigate } from "react-router-dom";
 
-function Register() {
+export default function Register() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,7 +20,8 @@ function Register() {
     });
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     try {
       const response = await api.post("/auth/register", formData);
       setMessage(response.data.msg);
@@ -32,11 +33,8 @@ function Register() {
 
   return (
     <div className="container-register">
-      <form
-        className="auth-form register-form"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <h1 className="form-tittle">Cadastro de Usuários</h1>
+      <form className="auth-form register-form" onSubmit={handleRegister}>
+        <h1 className="form-tittle">Cadastre-se</h1>
         <input
           placeholder="Name"
           name="name"
@@ -65,9 +63,7 @@ function Register() {
           value={formData.confirmpassword}
           onChange={handleChange}
         />
-        <button type="button" onClick={handleRegister}>
-          Cadastrar-se
-        </button>
+        <button type="submit">Cadastrar-se</button>
         <button type="button" onClick={() => navigate("/login")}>
           Já é cadastrado?
         </button>
@@ -76,5 +72,3 @@ function Register() {
     </div>
   );
 }
-
-export default Register;
