@@ -12,7 +12,7 @@ export default function Input(props: InputProps) {
   const { name, placeholder, type, value, onChange } = props;
   return (
     <input
-      className=" focus:outline-primary rounded-lg py-2 px-10"
+      className=" focus:outline-orange-600 rounded-lg py-2 px-10 "
       placeholder={placeholder}
       name={name}
       type={type}

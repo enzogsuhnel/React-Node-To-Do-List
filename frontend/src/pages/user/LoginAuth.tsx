@@ -1,10 +1,10 @@
 import { useState } from "react";
 import api from "../../services/api";
-import "./style.css";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../components/navigation/Navigation";
 import Input from "../../components/input/Input";
 import React from "react";
+import Button from "../../components/buttom/Button";
 
 export default function LoginAuth() {
   const [formData, setFormData] = useState({
@@ -35,31 +35,33 @@ export default function LoginAuth() {
 
   return (
     <div className="h-full flex justify-center items-center">
-        <form className=" flex flex-col gap-4" onSubmit={handleLogin}>
-          <h1 className="text-white text-3xl font-semibold">Login</h1>
-          <Input
-            placeholder="E-mail"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <Input
-            placeholder="Senha"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <button type="submit">
-            <span className="bg-primary">Entrar</span>
-          </button>
-          <button type="button" onClick={() => navigate("/register")}>
-            <span className="form-button-text">Cadastre-se</span>
-          </button>
-          {message && <p className="error-message">{message}</p>}
-        </form>
-     
+      <form className=" flex flex-col gap-4" onSubmit={handleLogin}>
+        <h1 className="text-white text-3xl font-semibold">Login</h1>
+        <Input
+          placeholder="E-mail"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <Input
+          placeholder="Senha"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <Button type="submit" text="Entrar" />
+        <Button
+          type="button"
+          variant="outlined"
+          textColor="text-white"
+          text="Cadastre-se"
+          onClick={() => navigate("/register")}
+        />
+
+        {message && <p className="error-message">{message}</p>}
+      </form>
     </div>
   );
 }

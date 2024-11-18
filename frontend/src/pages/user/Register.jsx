@@ -1,7 +1,8 @@
 import { useState } from "react";
 import api from "../../services/api";
-import "./style.css";
 import { useNavigate } from "react-router-dom";
+import Input from "../../components/input/Input";
+import Button from "../../components/buttom/Button";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -32,41 +33,45 @@ export default function Register() {
   };
 
   return (
-    <div className="container-register">
-      <form className="auth-form register-form" onSubmit={handleRegister}>
-        <h1 className="form-tittle">Cadastre-se</h1>
-        <input
-          placeholder="Name"
+    <div className="h-full flex justify-center items-center">
+      <form className="flex flex-col gap-4" onSubmit={handleRegister}>
+        <h1 className="text-white text-3xl font-semibold">Cadastre-se</h1>
+        <Input
+          placeholder="Nome"
           name="name"
           type="text"
           value={formData.name}
           onChange={handleChange}
         />
-        <input
-          placeholder="Email"
+        <Input
+          placeholder="E-mail"
           name="email"
           type="email"
           value={formData.email}
           onChange={handleChange}
         />
-        <input
-          placeholder="Password"
+        <Input
+          placeholder="Senha"
           name="password"
           type="password"
           value={formData.password}
           onChange={handleChange}
         />
-        <input
-          placeholder="Confirm Password"
+        <Input
+          placeholder="Confirmar senha"
           name="confirmpassword"
           type="password"
           value={formData.confirmpassword}
           onChange={handleChange}
         />
-        <button type="submit">Cadastrar-se</button>
-        <button type="button" onClick={() => navigate("/login")}>
-          Já é cadastrado?
-        </button>
+        <Button type="submit" text="Cadastrar" />
+        <Button
+          type="button"
+          text="Já é cadastrado?"
+          variant="'text"
+          textColor="text-white"
+          onClick={() => navigate("/login")}
+        />
         {message && <p className="error-message">{message}</p>}
       </form>
     </div>

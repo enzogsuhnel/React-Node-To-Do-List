@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import Input from "../../components/input/Input";
+import Button from "../../components/buttom/Button";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -21,57 +23,45 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/auth/register", formData);
-      setMessage(response.data.msg);
-      console.log(response);
+      //const response = await api.post("/auth/register", formData);
+      //setMessage(response.data.msg);
+      //console.log(response);
     } catch (error) {
       setMessage(error.response?.data?.msg || "Erro ao cadastrar");
     }
   };
   return (
-    <div className="container-register">
+    <div className="h-full flex justify-center items-center">
       <form
         id="editUser"
-        className="auth-form register-form"
+        className="flex flex-col gap-4"
         onSubmit={handleSubmit}
       >
-        <h1 className="form-tittle">Cadastro de Usuários</h1>
-        <input
-          placeholder="Name"
+        <h1 className="text-white text-3xl font-semibold">Editar Perfil</h1>
+        <Input
+          placeholder="Nome"
           name="name"
           type="text"
           value={formData.name}
           onChange={handleChange}
         />
-        <input
-          placeholder="Email"
+        <Input
+          placeholder="E-mail"
           name="email"
           type="email"
           value={formData.email}
           onChange={handleChange}
         />
-        <input
-          placeholder="Password"
+        <Input
+          placeholder="Senha"
           name="password"
           type="password"
           value={formData.password}
           onChange={handleChange}
         />
-        <input
-          placeholder="Confirm Password"
-          name="confirmpassword"
-          type="password"
-          value={formData.confirmpassword}
-          onChange={handleChange}
-        />
-        <button type="button" onClick={() => navigate("/login")}>
-          Já é cadastrado?
-        </button>
-        {message && <p className="error-message">{message}</p>}
+        <Button type="submit" text="Salvar alterações" />
+        {message && <p className="">{message}</p>}
       </form>
-      <button type="submit" form="editUser">
-        Cadastrar-se
-      </button>
     </div>
   );
 }
