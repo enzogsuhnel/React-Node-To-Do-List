@@ -19,12 +19,18 @@ export default function NotFound() {
         Oops! A página não existe.
       </p>
       <div className="not-found-buttons">
-        <button className="not-found-button" onClick={handleGoBack}>
-          Go Back
-        </button>
-        <button className="not-found-button" onClick={handleHome}>
-          Go to Home
-        </button>
+        <Button
+          text="Voltar"
+          variant="containedWhite"
+          type="button"
+          onClick={handleGoBack}
+        />
+        <Button
+          text="Tela incial"
+          variant="containedWhite"
+          type="button"
+          onClick={handleHome}
+        />
       </div>
     </div>
   );
