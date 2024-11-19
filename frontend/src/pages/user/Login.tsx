@@ -1,41 +1,57 @@
-import { useState } from "react";
-import api from "../../services/api";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navigation from "../../components/navigation/Navigation";
+import api from "../../services/api";
 import Input from "../../components/input/Input";
-import React from "react";
 import Button from "../../components/buttom/Button";
+import { UserContext } from "../../context/UserContext";
 
-export default function LoginAuth() {
+export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  // Context
+  const userContext = useContext(UserContext);
+
+  if (!userContext) {
+    return null;
+  }
+
+  const { user, setUser } = userContext;
+
+  //Navigate
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await api.post("/auth/login", formData);
+      const response = await api.post("/user/auth/login", formData);
       setMessage(response.data.msg);
-      console.log(response);
-    } catch (error) {
+      setUser(response.data.user);
+    } catch (error: any) {
       setMessage(error.response?.data?.msg || "Falha ao Entrar");
     }
   };
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   return (
-    <div className="h-full flex justify-center items-center">
-      <form className=" flex flex-col gap-4" onSubmit={handleLogin}>
+    <div className="h-full flex w-full justify-center items-center">
+      <form
+        className=" flex flex-col gap-4 sm:w-1/2 md:1/3 w-full mx-8 lg:w-1/3"
+        onSubmit={handleLogin}
+      >
         <h1 className="text-white text-3xl font-semibold">Login</h1>
         <Input
           placeholder="E-mail"
@@ -60,7 +76,7 @@ export default function LoginAuth() {
           onClick={() => navigate("/register")}
         />
 
-        {message && <p className="error-message">{message}</p>}
+        {message && <p className="text-error">{message}</p>}
       </form>
     </div>
   );

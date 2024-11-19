@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
-const schemaTask = model("Task", {
+const schemaTask = mongoose.Schema({
   title: { type: String },
   status: { type: Boolean },
   description: { type: String },
-  users: { type: [String] },
 });
 
-module.exports = mongoose.model("Task", schemaTask);
+const Task = mongoose.model("Task", schemaTask);
+
+export default Task;

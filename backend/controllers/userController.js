@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
   try {
     const secret = process.env.SECRET;
     const token = jwt.sign({ id: user._id }, secret);
-    res.status(200).json({ msg: "Autenticação realizada com sucesso", token });
+    res.status(200).json({ user, msg: "Autenticação realizada com sucesso", token });
   } catch (error) {
     res.status(500).json({
       msg: "Houve um erro no servidor, entre em contato com o suporte.",
@@ -64,11 +64,9 @@ const loginUser = async (req, res) => {
 // Obter dados do usuário
 const getUserById = async (id) => {
   const user = await User.findById(id);
-  return(user);
+  return user;
 };
 
-const updateUser = async (req, res) => {
-  
-}
+const updateUser = async (req, res) => {};
 
 export default { loginUser, registerUser, getUserById };

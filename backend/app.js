@@ -1,9 +1,10 @@
-import express, { json } from 'express';
-import connectDB from './db.js';
-import cors from 'cors'
+import express, { json } from "express";
+import connectDB from "./db.js";
+import cors from "cors";
 
 // Rotas
-import userRoutes from './routes/userRoutes.js';
+import userRoutes from "./routes/userRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,7 +19,8 @@ app.use(json());
 app.use(cors());
 
 // Rotas
-app.use("/", userRoutes);
+app.use("/user", userRoutes);
+app.use("/task", taskRoutes);
 
 // Iniciar o servidor
 app.listen(PORT, () => {

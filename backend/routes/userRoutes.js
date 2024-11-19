@@ -1,20 +1,16 @@
 import { Router } from "express";
 import userController from "../controllers/userController.js";
-import checkToken from "..//middlewares/authMiddleware.js";
-
+import checkToken from "../middlewares/authMiddleware.js";
 import User from "../models/User.js";
 
 const router = Router();
-
-// Rota pública
-router.get("/", (req, res) => res.status(200).json({ msg: "Bem-vindo à API" }));
 
 // Rotas de autenticação
 router.post("/auth/register", userController.registerUser);
 router.post("/auth/login", userController.loginUser);
 
 // Rota privada
-router.get("/user/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (user) {
@@ -27,11 +23,10 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-// GET: Listar todos os servicos
-// ARRUMAR PASSWORD
-router.get("/users", async (req, res) => {
+// GET: Listar todos os usuarios
+router.get("/all", async (req, res) => {
   try {
-    const users = await User.find().select('-password');
+    const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: "Erro ao buscar serviços", error: err });
