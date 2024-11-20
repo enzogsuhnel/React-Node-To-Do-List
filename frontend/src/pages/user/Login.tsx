@@ -37,6 +37,7 @@ export default function Login() {
       const response = await api.post("/user/auth/login", formData);
       setMessage(response.data.msg);
       setUser(response.data.user);
+      navigate("/tasks");
     } catch (error: any) {
       setMessage(error.response?.data?.msg || "Falha ao Entrar");
     }

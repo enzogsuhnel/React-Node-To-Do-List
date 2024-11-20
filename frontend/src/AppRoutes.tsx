@@ -26,6 +26,7 @@ export default function AppRoutes() {
         <Route path="/" element={<Layout />}>
           {!user ? (
             <>
+              <Route path="/" element={<Login />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </>
@@ -35,8 +36,8 @@ export default function AppRoutes() {
               <Route path="/tasks" element={<Tasks />} />
             </>
           )}
-          <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

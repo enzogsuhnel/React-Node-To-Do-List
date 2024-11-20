@@ -4,15 +4,11 @@ import User from "../models/User.js";
 
 // Registro de usuário
 const registerUser = async (req, res) => {
-  const { name, email, password, confirmpassword } = req.body;
+  const { name, email, password } = req.body;
 
   if (!name) return res.status(422).json({ msg: "O nome é obrigatório" });
   if (!email) return res.status(422).json({ msg: "e-mail é obrigatório" });
   if (!password) return res.status(422).json({ msg: "A senha é obrigatória" });
-  if (password !== confirmpassword) {
-    return res.status(422).json({ msg: "As senhas não conferem!" });
-  }
-
   const userExists = await User.findOne({ email });
   if (userExists) {
     return res.status(422).json({ msg: "E-mail já cadastrado!" });
@@ -53,7 +49,9 @@ const loginUser = async (req, res) => {
   try {
     const secret = process.env.SECRET;
     const token = jwt.sign({ id: user._id }, secret);
-    res.status(200).json({ user, msg: "Autenticação realizada com sucesso", token });
+    res
+      .status(200)
+      .json({ user, msg: "Autenticação realizada com sucesso", token });
   } catch (error) {
     res.status(500).json({
       msg: "Houve um erro no servidor, entre em contato com o suporte.",

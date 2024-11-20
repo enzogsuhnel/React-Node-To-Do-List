@@ -10,12 +10,14 @@ export default function Tasks() {
     description: "",
     status: "False",
   });
+
   const handleChange = (e: any) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
   const handleTask = async (e: any) => {
     e.preventDefault();
     try {
@@ -35,7 +37,7 @@ export default function Tasks() {
     setTasks([...tasks, formData.title]);
   };
   return (
-    <div className="ml-2">
+    <div className="w-full">
       <h1>Bom dia, Sullivan</h1>
       {tasks.map((task, index) => (
         <div className="bg-neutral-200 rounded-sm p-2 flex gap-2" key={index}>

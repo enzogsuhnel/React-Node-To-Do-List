@@ -9,7 +9,7 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmpassword: "",
   });
 
   const navigate = useNavigate();
@@ -24,16 +24,20 @@ export default function Register() {
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    try {
-      const response = await api.post("/user/auth/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
-      setMessage(response.data.msg);
-      console.log(response);
-    } catch (error: any) {
-      setMessage(error.response?.data?.msg || "Erro ao cadastrar");
+    if (formData.password !== formData.confirmpassword) {
+      setMessage("As senhas não conferem!");
+    } else {
+      try {
+        const response = await api.post("/user/auth/register", {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        });
+        setMessage(response.data.msg);
+        console.log(response);
+      } catch (error: any) {
+        setMessage(error.response?.data?.msg || "Erro ao cadastrar");
+      }
     }
   };
 
@@ -69,7 +73,7 @@ export default function Register() {
           placeholder="Confirmar senha"
           name="confirmpassword"
           type="password"
-          value={formData.confirmPassword}
+          value={formData.confirmpassword}
           onChange={handleChange}
         />
         <Button type="submit" text="Cadastrar" />
