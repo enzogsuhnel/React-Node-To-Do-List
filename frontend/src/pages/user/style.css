@@ -1,0 +1,81 @@
+.container-login {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 100px;
+}
+.container-register {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 100px;
+}
+
+.form-tittle {
+  color: #28cb8b;
+  font-size: 32px;
+  text-align: center;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px;
+  border-radius: 10px;
+  background-color: #212121;
+  width: 70%;
+  margin-bottom: 20px;
+  box-shadow: 1px 3px 5px #28cb8b;
+
+  & button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background-color: var(--primary);
+    color: #fff;
+    background-color: var(--primary);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    & button:hover {
+      background-color: #1e9767;
+    }
+  }
+
+}
+.user-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: #c7ffd082;
+  margin: 10px;
+  padding: 10px;
+  width: 500px;
+  max-width: 55%;
+  border-radius: 10px;
+
+  & p {
+    color: #3f3f3f;
+    font-weight: bold;
+  }
+
+  & span {
+    font-weight: normal;
+  }
+}
+
+.icon-button {
+  margin: 0;
+  background: none;
+}
+
+.error-message {
+  color: #e53835;
+  font: 3px;
+}
+
+@media (min-width: 1000px) and (orientation: landscape) {
+  .auth-form {
+    width: 45%;
+  }
+}

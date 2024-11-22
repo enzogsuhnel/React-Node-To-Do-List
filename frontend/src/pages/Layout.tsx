@@ -20,7 +20,7 @@ export default function Layout() {
     <div className="flex flex-col h-screen">
       <Navigation />
       <div className="flex-grow flex overflow-auto">
-        {user && <AsideBar />}
+        {!user && <AsideBar />}
         <div className="ml-4 mr-4 mt-4 w-full">
           <Outlet />
         </div>

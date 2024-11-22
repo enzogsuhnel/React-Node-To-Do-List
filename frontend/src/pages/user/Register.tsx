@@ -9,7 +9,7 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
-    confirmpassword: "",
+    confirmPassword: "",
   });
 
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function Register() {
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmpassword) {
+    if (formData.password !== formData.confirmPassword) {
       setMessage("As senhas não conferem!");
     } else {
       try {
@@ -32,6 +32,7 @@ export default function Register() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          confirmPassword: formData.confirmPassword,
         });
         setMessage(response.data.msg);
         console.log(response);
@@ -73,7 +74,7 @@ export default function Register() {
           placeholder="Confirmar senha"
           name="confirmpassword"
           type="password"
-          value={formData.confirmpassword}
+          value={formData.confirmPassword}
           onChange={handleChange}
         />
         <Button type="submit" text="Cadastrar" />

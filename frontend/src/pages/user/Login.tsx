@@ -34,7 +34,7 @@ export default function Login() {
   const handleLogin = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await api.post("/user/auth/login", formData);
+      const response = await api.post("/user/auth/login/", formData);
       setMessage(response.data.msg);
       setUser(response.data.user);
       navigate("/tasks");

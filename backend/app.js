@@ -5,6 +5,7 @@ import cors from "cors";
 // Rotas
 import userRoutes from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import taskListRoutes from "./routes/taskListRoutes.js"
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,6 +21,7 @@ app.use(cors());
 
 // Rotas
 app.use("/user", userRoutes);
+app.use("/task-list", taskListRoutes);
 app.use("/task", taskRoutes);
 
 // Iniciar o servidor

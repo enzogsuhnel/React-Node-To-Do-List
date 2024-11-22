@@ -4,11 +4,18 @@ import User from "../models/User.js";
 
 // Registro de usuário
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, confirmPassword } = req.body;
 
   if (!name) return res.status(422).json({ msg: "O nome é obrigatório" });
   if (!email) return res.status(422).json({ msg: "e-mail é obrigatório" });
   if (!password) return res.status(422).json({ msg: "A senha é obrigatória" });
+  if (!confirmPassword)
+    return res
+      .status(422)
+      .json({ msg: "A confirmação de senha é obrigatória!" });
+  if (password !== confirmPassword)
+    return res.status(422).json({ msg: "As senhas não coincidem!" });
+
   const userExists = await User.findOne({ email });
   if (userExists) {
     return res.status(422).json({ msg: "E-mail já cadastrado!" });
@@ -60,11 +67,65 @@ const loginUser = async (req, res) => {
 };
 
 // Obter dados do usuário
-const getUserById = async (id) => {
-  const user = await User.findById(id);
-  return user;
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      return res.status(404).json({ msg: "Usuário nao encontrado!" });
+    }
+  } catch (error) {
+    return res.status(500).json({ msg: "Erro no servidor" });
+  }
 };
 
-const updateUser = async (req, res) => {};
+//Atualizar usuário
+const updateUser = async (req, res) => {
+  const id = req.user.id;
+  const update = req.body;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, update, {
+      new: true, // Retorna a lista atualizada
+      runValidators: true, // Valida os dados antes de atualizar
+    });
 
-export default { loginUser, registerUser, getUserById };
+    res.status(200).json({
+      message: "Usuário atualizado com sucesso.",
+      taskList: updatedUser,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erro ao atualizar suas informações.", error });
+  }
+};
+
+//Deletar conta usuário
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id);
+    //Fazer get para apenas uma lista?
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não está logado." });
+    }
+
+    if (user.id.toString() !== req.user.id) {
+      return res
+        .status(403)
+        .json({ message: "Você não tem permissão para deletar esta conta." });
+    }
+
+    // Deleta todas as tarefas associadas à lista
+    await user.deleteOne();
+
+    res.status(200).json({
+      message: "Conta deletada com sucesso.",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao deletar a conta.", error });
+  }
+};
+export default { loginUser, registerUser, getUserById, updateUser, deleteUser };

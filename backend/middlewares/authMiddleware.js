@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const checkToken = (req, res) => {
+const checkToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
@@ -8,12 +8,12 @@ const checkToken = (req, res) => {
 
   try {
     const secret = process.env.SECRET;
-    jwt.verify(token, secret);
-    
-    userController.getUserById(req, res)
-
+    const decoded = jwt.verify(token, secret);
+    req.user = { id: decoded.id };
+    console.log(req);
+    next();
   } catch (error) {
-    res.status(400).json({ msg: "Token inválido!" });
+    res.status(401).json({ msg: "Token inválido!" });
   }
 };
 

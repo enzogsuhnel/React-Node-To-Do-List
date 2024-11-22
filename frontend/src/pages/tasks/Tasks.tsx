@@ -11,6 +11,9 @@ export default function Tasks() {
     status: "False",
   });
 
+  const [listTitle, setListTitle] = useState<string | null>(null);
+  const [list, setList] = useState<boolean>(false);
+
   const handleChange = (e: any) => {
     setFormData({
       ...formData,
@@ -38,10 +41,33 @@ export default function Tasks() {
   };
   return (
     <div className="w-full">
-      <h1>Bom dia, Sullivan</h1>
+      {!list ? (
+        <div className="flex gap-6">
+          <input
+            placeholder="Compras mercado"
+            className="bg-transparent border-b border-b-neutral-50 placeholder:text-neutral-600 focus:outline-none text-white"
+            onChange={(e) => {
+              setListTitle(e.target.value.trim());
+            }}
+          />
+          <Button
+            text="Criar lista"
+            textColor="text-white"
+            variant="contained"
+            type="submit"
+            onClick={() => {
+              listTitle && setList(true);
+            }}
+          />
+        </div>
+      ) : (
+        <h1 className="text-white text-lg">{listTitle}</h1>
+      )}
+
       {tasks.map((task, index) => (
         <div className="bg-neutral-200 rounded-sm p-2 flex gap-2" key={index}>
           <input type="checkbox" name="" id={`${index}`} />
+
           <label className="w-full block" htmlFor={`${index}`}>
             {task}
           </label>
