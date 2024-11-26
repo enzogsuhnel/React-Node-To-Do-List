@@ -18,7 +18,7 @@ export default function Login() {
     return null;
   }
 
-  const { user, setUser } = userContext;
+  const { loginUser } = userContext;
 
   //Navigate
   const navigate = useNavigate();
@@ -35,17 +35,14 @@ export default function Login() {
     e.preventDefault();
     try {
       const response = await api.post("/user/auth/login/", formData);
+      sessionStorage.setItem("user", JSON.stringify(response.data.user));
       setMessage(response.data.msg);
-      setUser(response.data.user);
-      navigate("/tasks");
+      loginUser(response.data.user);
+      navigate("/task-list");
     } catch (error: any) {
       setMessage(error.response?.data?.msg || "Falha ao Entrar");
     }
   };
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   return (
     <div className="h-full flex w-full justify-center items-center">

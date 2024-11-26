@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Tasks from "./pages/tasks/Tasks";
@@ -14,17 +14,13 @@ export default function AppRoutes() {
   if (!userContext) {
     return null;
   }
-  const { user } = userContext;
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  const { getUser } = userContext;
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          {!user ? (
+          {!getUser() ? (
             <>
               <Route path="/" element={<Login />} />
               <Route path="/login" element={<Login />} />

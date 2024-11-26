@@ -8,8 +8,10 @@ interface User {
 }
 
 interface UserContextType {
-  user: User | null;
-  setUser: (user: User) => void;
+  user: string | null;
+  loginUser: (user: User) => void;
+  logoutUser: () => void;
+  getUser: () => string | null;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -17,15 +19,25 @@ export const UserContext = createContext<UserContextType | undefined>(
 );
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = sessionStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  const loginUser = (userData: User) => {
+    sessionStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  const logoutUser = () => {
+    sessionStorage.removeItem("user");
+    setUser(null);
+  };
+
+  const getUser = () => user;
 
   return (
-    <UserContext.Provider
-      value={{
-        user,
-        setUser,
-      }}
-    >
+    <UserContext.Provider value={{ user, loginUser, logoutUser, getUser }}>
       {children}
     </UserContext.Provider>
   );

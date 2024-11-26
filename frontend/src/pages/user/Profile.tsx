@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../../services/api";
 import Input from "../../components/input/Input";
 import Button from "../../components/buttom/Button";
+import { UserContext } from "../../context/UserContext";
 
 export default function Profile() {
   const [message, setMessage] = useState("");
@@ -11,6 +12,13 @@ export default function Profile() {
     email: "",
     password: "",
   });
+  const userContext = useContext(UserContext);
+  if (!userContext) {
+    return null;
+  }
+  const { user } = userContext;
+  console.log(user);
+
   const handleChange = (e: any) => {
     setFormData({
       ...formData,
@@ -18,12 +26,11 @@ export default function Profile() {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleProfile = async (e: any) => {
     e.preventDefault();
     try {
-      //const response = await api.post("/auth/register", formData);
-      //setMessage(response.data.msg);
-      //console.log(response);
+      const response = await api.patch(`user/${user?._id}`, formData);
+      console.log(response);
     } catch (error: any) {
       setMessage(error.response?.data?.msg || "Erro ao cadastrar");
     }
@@ -33,7 +40,7 @@ export default function Profile() {
       <form
         id="editUser"
         className="flex flex-col gap-4 sm:w-1/2 md:1/3 w-full mx-8 lg:w-1/3"
-        onSubmit={handleSubmit}
+        onSubmit={handleProfile}
       >
         <h1 className="text-white text-3xl font-semibold">Editar Perfil</h1>
         <Input

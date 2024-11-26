@@ -24,9 +24,7 @@ export default function Tasks() {
   const handleTask = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await api.post("/task/create-task", {
-        title: formData.title,
-        status: false,
+      const response = await api.post("/task/", {
         description: formData.description,
       });
       setMessage(response.data.msg);
@@ -40,7 +38,7 @@ export default function Tasks() {
     setTasks([...tasks, formData.title]);
   };
   return (
-    <div className="w-full">
+    <div className="w-full00 bg-neutral-2">
       {!list ? (
         <div className="flex gap-6">
           <input
@@ -76,13 +74,6 @@ export default function Tasks() {
       <div className="absolute bottom-4">
         <form onSubmit={handleTask}>
           <div className="flex flex-col bg-neutral-400 p-3 gap-2 mb-2 rounded-md ">
-            <Input
-              name="title"
-              placeholder="Tarefa"
-              type="text"
-              value={formData.title}
-              onChange={handleChange}
-            />
             <Input
               name="description"
               placeholder="Descrição"

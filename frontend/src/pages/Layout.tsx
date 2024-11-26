@@ -10,17 +10,19 @@ export default function Layout() {
   if (!userContext) {
     return null;
   }
-  const { user } = userContext;
+  const { getUser } = userContext;
+
+  const user = getUser()
 
   useEffect(() => {
-    console.log(user);
-  }, [user]);
+    console.log('oi',user);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen">
       <Navigation />
       <div className="flex-grow flex overflow-auto">
-        {!user && <AsideBar />}
+        {user && <AsideBar />}
         <div className="ml-4 mr-4 mt-4 w-full">
           <Outlet />
         </div>

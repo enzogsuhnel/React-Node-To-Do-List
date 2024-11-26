@@ -3,7 +3,7 @@ interface ButtonProps {
   type: "submit" | "button";
   text: string;
   onClick?: () => void;
-  variant?: "contained" | "outlined" | "text" | "containedWhite";
+  variant?: "contained" | "outlined" | "text";
   textColor?: string;
 }
 
@@ -11,17 +11,16 @@ export default function Button(props: ButtonProps) {
   const { type, text, onClick, variant = "contained", textColor } = props;
 
   const VariantStyle = {
-    contained: "bg-orange-600 hover:bg-orange-700",
-    outlined: "border border-orange-600 hover:text-orange-200",
+    contained: "bg-teal-500 text- hover:bg-teal-700",
+    outlined: "border border-teal-500 hover:text-teal-500",
     text: "",
-    containedWhite: "bg-orange-600 hover:bg-orange-700 text-neutral-200",
   };
 
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`${VariantStyle[variant]} ${textColor} rounded-lg p-2 font-semibold text-base`}
+      className={`${VariantStyle[variant]} ${textColor} rounded-lg py-2 px-6 font-semibold text-base`}
     >
       {text}
     </button>
