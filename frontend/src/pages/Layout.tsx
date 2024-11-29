@@ -15,7 +15,7 @@ export default function Layout() {
   const user = getUser()
 
   useEffect(() => {
-    console.log('oi',user);
+    console.log('oi', user);
   }, []);
 
   return (
@@ -23,7 +23,7 @@ export default function Layout() {
       <Navigation />
       <div className="flex-grow flex overflow-auto">
         {user && <AsideBar />}
-        <div className="ml-4 mr-4 mt-4 w-full">
+        <div className="ml-4 mt-4 w-full">
           <Outlet />
         </div>
       </div>

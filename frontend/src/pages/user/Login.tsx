@@ -4,6 +4,8 @@ import api from "../../services/api";
 import Input from "../../components/input/Input";
 import Button from "../../components/buttom/Button";
 import { UserContext } from "../../context/UserContext";
+import Hero from "../../components/hero/Hero";
+import InputErrorMessage from "../../components/input/InputErrorMessage";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -23,59 +25,61 @@ export default function Login() {
   //Navigate
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
+  const [inputError, setInputError] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    e.target.value.trim() == "" && setInputError(true)
   };
 
-  const handleLogin = async (e: any) => {
+  const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await api.post("/user/auth/login/", formData);
-      sessionStorage.setItem("user", JSON.stringify(response.data.user));
-      setMessage(response.data.msg);
-      loginUser(response.data.user);
-      navigate("/task-list");
-    } catch (error: any) {
-      setMessage(error.response?.data?.msg || "Falha ao Entrar");
+    if (!inputError) {
+      try {
+        const response = await api.post("/user/auth/login/", formData);
+        sessionStorage.setItem("user", JSON.stringify(response.data.user));
+        setMessage(response.data.msg);
+        loginUser(response.data.user);
+        navigate("/task-list");
+      } catch (error: any) {
+        setMessage(error.response?.data?.msg || "Falha ao Entrar");
+      }
     }
   };
 
   return (
-    <div className="h-full flex w-full justify-center items-center">
+    <Hero>
       <form
-        className=" flex flex-col gap-4 sm:w-1/2 md:1/3 w-full mx-8 lg:w-1/3"
+        className="w-full lg:w-1/2 bg-white rounded-l-[40px] px-10 py-10 overflow-hidden flex flex-col gap-10"
         onSubmit={handleLogin}
       >
-        <h1 className="text-white text-3xl font-semibold">Login</h1>
-        <Input
-          placeholder="E-mail"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <Input
-          placeholder="Senha"
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+        <h1 className=" text-2xl">Entrar</h1>
+        <div className="flex flex-col gap-4">
+          <Input
+            placeholder="E-mail"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          {inputError && formData.email.trim() == "" && <InputErrorMessage />}
+          <Input
+            placeholder="Senha"
+            name="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          {inputError && formData.password.trim() == "" && <InputErrorMessage />}
+          {message && <p className="text-error">{message}</p>}
+        </div>
         <Button type="submit" text="Entrar" />
-        <Button
-          type="button"
-          variant="outlined"
-          textColor="text-white"
-          text="Cadastre-se"
-          onClick={() => navigate("/register")}
-        />
-
-        {message && <p className="text-error">{message}</p>}
+        <p className="text-sm text-center">Não é cadastrado? <a href="/register" className="text-orange-600 hover:border-b hover:border-orange-600">Cadastrar-se</a></p>
       </form>
-    </div>
+    </Hero>
+
   );
 }

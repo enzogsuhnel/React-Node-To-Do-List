@@ -11,7 +11,7 @@ export default function Button(props: ButtonProps) {
   const { type, text, onClick, variant = "contained", textColor } = props;
 
   const VariantStyle = {
-    contained: "bg-teal-500 text- hover:bg-teal-700",
+    contained: "bg-teal-400 hover:bg-teal-500",
     outlined: "border border-teal-500 hover:text-teal-500",
     text: "",
   };
@@ -20,7 +20,7 @@ export default function Button(props: ButtonProps) {
     <button
       type={type}
       onClick={onClick}
-      className={`${VariantStyle[variant]} ${textColor} rounded-lg py-2 px-6 font-semibold text-base`}
+      className={`${VariantStyle[variant]} ${textColor} rounded py-2 px-4 font-medium text-base`}
     >
       {text}
     </button>
