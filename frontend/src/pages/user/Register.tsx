@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Input from "../../components/input/Input";
-import Button from "../../components/buttom/Button";
+import Button from "../../components/button/Button";
 import api from "../../services/api";
 import Hero from "../../components/hero/Hero";
 import InputErrorMessage from "../../components/input/InputErrorMessage";
@@ -89,7 +89,7 @@ export default function Register() {
           {message && <p className="text-red-700">{message}</p>}
         </div>
         <Button type="submit" text="Cadastrar" />
-        <p className="text-sm text-center">Já é cadastrado? <a href="/login" className="text-orange-600 hover:border-b hover:border-orange-600">Entrar</a></p>
+        <p className="text-sm text-center">Já é cadastrado? <a href="/login" className="text-orange-500 hover:border-b hover:border-orange-500">Entrar</a></p>
       </form>
     </Hero>
   );

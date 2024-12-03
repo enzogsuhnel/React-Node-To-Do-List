@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema({
     ref: "TaskList",
     required: true,
   },
-  description: {
+  title: {
     type: String,
     required: true,
   },

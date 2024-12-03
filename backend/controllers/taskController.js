@@ -3,8 +3,8 @@ import TaskList from "../models/TaskList.js";
 
 const createTask = async (req, res) => {
   try {
-    const { description, taskListId, isCompleted } = req.body;
-    const task = new Task({ description, isCompleted, taskListId });
+    const { title, taskListId, isCompleted } = req.body;
+    const task = new Task({ title, isCompleted, taskListId });
     await task.save();
     res.status(201).json(task);
   } catch (err) {

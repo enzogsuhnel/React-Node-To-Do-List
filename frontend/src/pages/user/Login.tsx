@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../services/api";
 import Input from "../../components/input/Input";
-import Button from "../../components/buttom/Button";
-import { UserContext } from "../../context/UserContext";
+import Button from "../../components/button/Button";
+import { UserContext, UserLogin } from "../../context/UserContext";
 import Hero from "../../components/hero/Hero";
 import InputErrorMessage from "../../components/input/InputErrorMessage";
+import api from "../../services/api";
 
 export default function Login() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserLogin>({
     email: "",
     password: "",
   });
@@ -37,23 +37,22 @@ export default function Login() {
 
   const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!inputError) {
       try {
-        const response = await api.post("/user/auth/login/", formData);
-        sessionStorage.setItem("user", JSON.stringify(response.data.user));
-        setMessage(response.data.msg);
-        loginUser(response.data.user);
+        await loginUser(formData);
         navigate("/task-list");
       } catch (error: any) {
-        setMessage(error.response?.data?.msg || "Falha ao Entrar");
+        setMessage("Erro ao fazer login. Tente novamente!");
       }
     }
   };
 
+
   return (
     <Hero>
       <form
-        className="w-full lg:w-1/2 bg-white rounded-l-[40px] px-10 py-10 overflow-hidden flex flex-col gap-10"
+        className="w-full h-fit lg:w-1/2 bg-white rounded-l-[40px] px-10 py-10 overflow-hidden flex flex-col gap-10"
         onSubmit={handleLogin}
       >
         <h1 className=" text-2xl">Entrar</h1>
@@ -74,12 +73,11 @@ export default function Login() {
             onChange={handleChange}
           />
           {inputError && formData.password.trim() == "" && <InputErrorMessage />}
-          {message && <p className="text-error">{message}</p>}
+          {message && <p className="text-red-700">{message}</p>}
         </div>
         <Button type="submit" text="Entrar" />
-        <p className="text-sm text-center">Não é cadastrado? <a href="/register" className="text-orange-600 hover:border-b hover:border-orange-600">Cadastrar-se</a></p>
+        <p className="text-sm text-center">Não é cadastrado? <a href="/register" className="text-orange-500 hover:border-b hover:border-orange-500">Cadastrar-se</a></p>
       </form>
     </Hero>
-
   );
 }

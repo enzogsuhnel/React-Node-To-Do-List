@@ -14,19 +14,15 @@ export default function Layout() {
 
   const user = getUser()
 
-  useEffect(() => {
-    console.log('oi', user);
-  }, []);
-
   return (
-    <div className="flex flex-col h-screen">
-      <Navigation />
-      <div className="flex-grow flex overflow-auto">
-        {user && <AsideBar />}
-        <div className="ml-4 mt-4 w-full">
+    <div className="flex flex-row h-screen">
+      {user && <AsideBar />}
+      <div className="flex flex-col h-screen flex-grow">
+        <Navigation />
+        <div className={`${user && "pl-0 md:pl-[64px]"} bg-primary w-full flex-grow flex`}>
           <Outlet />
         </div>
       </div>
-    </div>
+    </div >
   );
 }

@@ -29,6 +29,7 @@ export default function AppRoutes() {
           ) : (
             <>
               <Route path="/profile" element={<Profile />} />
+              <Route path="/" element={<Tasks />} />
               <Route path="/task-list" element={<Tasks />} />
             </>
           )}

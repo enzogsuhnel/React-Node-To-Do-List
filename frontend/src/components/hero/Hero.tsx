@@ -8,7 +8,7 @@ interface HeroProps {
 
 export default function Hero({ children }: HeroProps) {
   return (
-    <div className="flex flex-col lg:flex-row w-full justify-between items-center gap-16 mt-10">
+    <div className="flex flex-col lg:flex-row w-full justify-between items-center gap-16 mt-10 h-fit">
       <div className="w-full lg:w-1/2 flex flex-col gap-8 mx-8">
         <p className="text-3xl md:text-4xl text-white font-semibold leading-10">
           Organize suas tarefas e <br />

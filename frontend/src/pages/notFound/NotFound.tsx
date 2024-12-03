@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./style.css";
-import Button from "../../components/buttom/Button";
+import Button from "../../components/button/Button";
 
 export default function NotFound() {
   const navigate = useNavigate();
@@ -13,12 +12,12 @@ export default function NotFound() {
     navigate("/"); // Navega para a página inicial
   };
   return (
-    <div className="not-found-container">
+    <div className="bg-primary h-screen w-full flex flex-col items-center justify-center">
       <h1 className="font-semibold text-9xl text-teal-500">404</h1>
       <p className="text-neutral-200 mb-5 text-3xl font-extralight">
         Oops! A página não existe.
       </p>
-      <div className="not-found-buttons">
+      <div className="flex gap-4">
         <Button text="Voltar" type="button" onClick={handleGoBack} />
         <Button text="Tela incial" type="button" onClick={handleHome} />
       </div>

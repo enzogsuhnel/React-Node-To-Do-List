@@ -4,12 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#0D0D0D",
-        darkergreen: "#1e9767",
-        lightgreen: "#d4fdd8",
-        error: "#F53D32",
-        success: "#13AFFF",
-        waning: "#FFB90D",
+        primary: '#012e33',
+        secondary: '#66CCCC',
+        tertiary: '#33757C',
+        container: '#dbe7e6'
       },
     },
   },

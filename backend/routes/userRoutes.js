@@ -5,13 +5,6 @@ import User from "../models/User.js";
 
 const router = Router();
 
-router.post("/auth/register", userController.registerUser);
-router.post("/auth/login", userController.loginUser);
-router.use(checkToken);
-router.get("/:id", userController.getUserById);
-router.patch("/:id", userController.updateUser);
-router.delete("/:id", userController.deleteUser);
-
 // GET: Listar todos os usuarios
 router.get("/", async (req, res) => {
   try {
@@ -21,4 +14,12 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Erro ao buscar serviços", error: err });
   }
 });
+
+router.post("/auth/register", userController.registerUser);
+router.post("/auth/login", userController.loginUser);
+router.use(checkToken);
+router.get("/:id", userController.getUserById);
+router.patch("/:id", userController.updateUser);
+router.delete("/:id", userController.deleteUser);
+
 export default router;
