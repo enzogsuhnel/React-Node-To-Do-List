@@ -1,44 +1,48 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Input from "../../components/input/Input";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button";
 import api from "../../services/api";
 import Hero from "../../components/hero/Hero";
 import InputErrorMessage from "../../components/input/InputErrorMessage";
+import { UserContext, UserParams } from "../../context/UserContext";
 
 export default function Register() {
-  const [formData, setFormData] = useState({
+  const [userData, setUserData] = useState<UserParams>({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-
+  const userContext = useContext(UserContext);
+  if (!userContext) {
+    return null;
+  }
+  const { registerUser } = userContext;
   const [message, setMessage] = useState("");
   const [inputError, setInputError] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: any) => {
-    setFormData({
-      ...formData,
+    setUserData({
+      ...userData,
       [e.target.name]: e.target.value,
     });
-    e.target.value.trim() == "" && setInputError(true)
+    e.target.value.trim() == "" && setInputError(true);
   };
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
     if (!inputError) {
-      if (formData.password !== formData.confirmPassword) {
+      console.log(userData);
+      if (userData.password !== userData.confirmPassword) {
         setMessage("As senhas não conferem!");
       } else {
         try {
-          const response = await api.post("/user/auth/register", {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-            confirmPassword: formData.confirmPassword,
-          });
-          setMessage(response.data.msg);
+          const response = await registerUser(userData);
           console.log(response);
+          setMessage(response.data.msg);
+          navigate("/login");
         } catch (error: any) {
           setMessage(error.response?.data?.msg || "Erro ao cadastrar");
         }
@@ -58,38 +62,50 @@ export default function Register() {
             placeholder="Nome"
             name="name"
             type="text"
-            value={formData.name}
+            value={userData.name}
             onChange={handleChange}
           />
-          {inputError && formData.name.trim() == "" && <InputErrorMessage />}
+          {inputError && userData.name.trim() == "" && <InputErrorMessage />}
           <Input
             placeholder="E-mail"
             name="email"
             type="email"
-            value={formData.email}
+            value={userData.email}
             onChange={handleChange}
           />
-          {inputError && formData.email.trim() == "" && <InputErrorMessage />}
+          {inputError && userData.email.trim() == "" && <InputErrorMessage />}
           <Input
             placeholder="Senha"
             name="password"
             type="password"
-            value={formData.password}
+            value={userData.password}
             onChange={handleChange}
           />
-          {inputError && formData.password.trim() == "" && <InputErrorMessage />}
+          {inputError && userData.password.trim() == "" && (
+            <InputErrorMessage />
+          )}
           <Input
             placeholder="Confirmar senha"
             name="confirmPassword"
             type="password"
-            value={formData.confirmPassword}
+            value={userData.confirmPassword}
             onChange={handleChange}
           />
-          {inputError && formData.confirmPassword.trim() == "" && <InputErrorMessage />}
+          {inputError && userData.confirmPassword.trim() == "" && (
+            <InputErrorMessage />
+          )}
           {message && <p className="text-red-700">{message}</p>}
         </div>
         <Button type="submit" text="Cadastrar" />
-        <p className="text-sm text-center">Já é cadastrado? <a href="/login" className="text-orange-500 hover:border-b hover:border-orange-500">Entrar</a></p>
+        <p className="text-sm text-center">
+          Já é cadastrado?{" "}
+          <a
+            href="/login"
+            className="text-orange-500 hover:border-b hover:border-orange-500"
+          >
+            Entrar
+          </a>
+        </p>
       </form>
     </Hero>
   );

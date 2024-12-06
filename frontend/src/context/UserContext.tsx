@@ -1,11 +1,24 @@
-import React, { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 import api from "../services/api.js";
 
-interface User {
+export interface User {
   _id: string;
   name: string;
   email: string;
   password: string;
+}
+export interface UserParams {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface UserUpdateParams {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
 export interface UserLogin {
@@ -14,10 +27,14 @@ export interface UserLogin {
 }
 
 interface UserContextType {
-  user: string | null;
+  user: User | null;
   loginUser: (user: UserLogin) => any;
   logoutUser: () => void;
-  getUser: () => string | null;
+  deleteUser: (userId: string) => any;
+  getUserById: (userId: string) => any;
+  getSessionUser: () => string | null;
+  registerUser: (userData: UserParams) => any;
+  updateUser: (userData: UserUpdateParams, userId: string) => any;
   menuOpen: boolean;
   setMenuOpen: (open: boolean) => void;
   activeRoute: string;
@@ -34,15 +51,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [activeRoute, setActiveRoute] = useState("/")
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeRoute, setActiveRoute] = useState("/");
 
   const loginUser = async (userData: UserLogin) => {
     try {
       const response = await api.post("/user/auth/login/", userData);
-      sessionStorage.setItem("user", JSON.stringify(response.data));
-      setUser(userData);
-      return response
+      const sessionUser = await response.data;
+      sessionStorage.setItem("user", JSON.stringify(sessionUser.user));
+      sessionStorage.setItem("token", JSON.stringify(sessionUser.token));
+
+      setUser(sessionUser.user);
+      return response;
     } catch (error: any) {
       const errorMessage = error.response.data?.message || "Erro desconhecido.";
       return Promise.reject(new Error(errorMessage));
@@ -51,23 +71,92 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const logoutUser = () => {
     sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
     setUser(null);
   };
 
-  const getUser = () => user;
+  const registerUser = async (userData: UserParams) => {
+    try {
+      const response = await api.post("/user/auth/register", {
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+        confirmPassword: userData.confirmPassword,
+      });
+      return response;
+    } catch (error: any) {
+      const errorMessage = error.response.data?.message || "Erro desconhecido.";
+      return Promise.reject(new Error(errorMessage));
+    }
+  };
 
+  const getUserById = async (userId: string) => {
+    try {
+      const response = await api.get(`/user/${userId}`);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error.response.data?.message || "Erro desconhecido.";
+      return Promise.reject(new Error(errorMessage));
+    }
+  };
+
+  const getSessionUser = () => user;
+  const deleteUser = async (userId: string) => {
+    console.log("Entrei na Função Context");
+    try {
+      //o erro ta antes do res
+      const response = await api.delete(`/user/${userId}`);
+      logoutUser();
+      console.log(response);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error.response.data?.message || "Erro desconhecido.";
+      return Promise.reject(new Error(errorMessage));
+    }
+  };
+  const updateUser = async (userData: UserUpdateParams, userId: string) => {
+    try {
+      console.log("Update");
+
+      const response = await api.patch(`/user/${userId}`, {
+        name: userData.name?.trim() != "" ? userData.name?.trim() : undefined,
+        email:
+          userData.email?.trim() != "" ? userData.email?.trim() : undefined,
+        password:
+          userData.password?.trim() != ""
+            ? userData.password?.trim()
+            : undefined,
+        confirmPassword:
+          userData.confirmPassword?.trim() != ""
+            ? userData.confirmPassword?.trim()
+            : undefined,
+      });
+      console.log("response: ", response);
+
+      return response;
+    } catch (error: any) {
+      const errorMessage = error.response.data?.message || "Erro desconhecido.";
+      console.log("erro: ", error);
+      return Promise.reject(new Error(errorMessage));
+    }
+  };
   return (
     <UserContext.Provider
       value={{
         user,
         loginUser,
         logoutUser,
-        getUser,
+        getUserById,
+        deleteUser,
+        getSessionUser,
+        registerUser,
+        updateUser,
         activeRoute,
         setActiveRoute,
         menuOpen,
-        setMenuOpen
-      }}>
+        setMenuOpen,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

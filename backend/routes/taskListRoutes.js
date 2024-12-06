@@ -15,11 +15,11 @@ const router = Router();
 //   }
 // });
 
-router.use(checkToken)
-router.post('/', taskListController.createList);
-router.delete('/:id', taskListController.deleteTaskList);
-router.get('/', taskListController.getLists);
-router.put('/:id', taskListController.updateList);
+router.use(checkToken);
+router.post("/", taskListController.createList);
+router.delete("/:id", taskListController.deleteTaskList);
+router.get("/", taskListController.getLists);
+router.patch("/:id", taskListController.updateList);
 
 export default router;
 // {

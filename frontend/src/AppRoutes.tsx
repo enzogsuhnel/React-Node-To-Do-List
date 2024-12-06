@@ -14,13 +14,13 @@ export default function AppRoutes() {
   if (!userContext) {
     return null;
   }
-  const { getUser } = userContext;
+  const { getSessionUser } = userContext;
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          {!getUser() ? (
+          {!getSessionUser() ? (
             <>
               <Route path="/" element={<Login />} />
               <Route path="/login" element={<Login />} />

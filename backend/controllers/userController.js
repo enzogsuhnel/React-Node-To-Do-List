@@ -92,7 +92,7 @@ const updateUser = async (req, res) => {
 
     res.status(200).json({
       message: "Usuário atualizado com sucesso.",
-      taskList: updatedUser,
+      user: updatedUser,
     });
   } catch (error) {
     res

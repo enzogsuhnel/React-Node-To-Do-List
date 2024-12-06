@@ -10,9 +10,7 @@ export default function Layout() {
   if (!userContext) {
     return null;
   }
-  const { getUser } = userContext;
-
-  const user = getUser()
+  const { user } = userContext;
 
   return (
     <div className="flex flex-row h-screen">

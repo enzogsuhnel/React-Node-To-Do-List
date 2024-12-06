@@ -1,19 +1,40 @@
-import { error } from "console";
 import React from "react";
 interface ButtonProps {
   type?: "submit" | "button";
   text?: string;
   onClick?: () => void;
   variant?: "contained" | "outlined" | "text";
-  textColor?: 'primary' | 'secondary' | 'tertiary' | 'error' | 'neutral' | 'white';
-  color?: 'primary' | 'secondary' | 'tertiary' | 'error' | 'lightNeutral' | 'neutral'
-  endIcon?: string,
-  startIcon?: string,
-  customclass?: string
+  textColor?:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "error"
+    | "neutral"
+    | "white";
+  color?:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "error"
+    | "lightNeutral"
+    | "neutral";
+  endIcon?: string;
+  startIcon?: string;
+  customclass?: string;
 }
 
 export default function Button(props: ButtonProps) {
-  const { type = 'button', text, onClick, variant = "contained", textColor, endIcon, startIcon, color = "secondary", customclass } = props;
+  const {
+    type = "button",
+    text,
+    onClick,
+    variant = "contained",
+    textColor,
+    endIcon,
+    startIcon,
+    color = "secondary",
+    customclass,
+  } = props;
 
   const VariantStyle = {
     contained: "",
@@ -31,7 +52,7 @@ export default function Button(props: ButtonProps) {
   };
 
   const ColorStyle = {
-    primary: "bg-primary  hover:bg-teal-500 text-white",
+    primary: "bg-primary  hover:bg-teal-800 text-white",
     secondary: "bg-secondary  hover:bg-teal-500 text-neutral-800",
     tertiary: "bg-tertiary  hover:bg-teal-500 text-white",
     error: "bg-red-500  hover:bg-red-600 text-white",
@@ -43,9 +64,17 @@ export default function Button(props: ButtonProps) {
     <button
       type={type}
       onClick={onClick}
-      className={`${customclass} ${VariantStyle[variant]} ${textColor && TextStyle[textColor]} ${variant == 'contained' && ColorStyle[color]}  ${textColor} rounded py-2 px-4 font-medium text-base ${(startIcon || endIcon) && "flex items-center gap-2"}`}
+      className={`${customclass} ${VariantStyle[variant]} ${
+        textColor && TextStyle[textColor]
+      } ${
+        variant == "contained" && ColorStyle[color]
+      }  ${textColor} rounded py-2 px-4 font-medium text-base ${
+        (startIcon || endIcon) && "flex items-center gap-2"
+      }`}
     >
-      {startIcon && <span className="material-symbols-outlined">{startIcon}</span>}
+      {startIcon && (
+        <span className="material-symbols-outlined">{startIcon}</span>
+      )}
       {text}
       {endIcon && <span className="material-symbols-outlined">{endIcon}</span>}
     </button>

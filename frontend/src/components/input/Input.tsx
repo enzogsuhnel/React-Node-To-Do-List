@@ -13,7 +13,7 @@ export default function Input(props: InputProps) {
   const { name, placeholder, type, value, onChange, className } = props;
   return (
     <input
-      className=" focus:border-teal-500 outline-none py-2 text-md border-b-2 border-neutral-400"
+      className={` focus:border-teal-500 outline-none py-2 text-md border-b-2 border-neutral-400 ${className}`}
       placeholder={placeholder}
       name={name}
       type={type}
