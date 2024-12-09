@@ -230,40 +230,42 @@ export default function Tasks() {
                   }}
                 />
               )}
-              <div className="relative">
-                <Button
-                  startIcon="more_vert"
-                  variant="text"
-                  onClick={handleToggleDropdown}
-                />
+              {taskList && (
+                <div className="relative">
+                  <Button
+                    startIcon="more_vert"
+                    variant="text"
+                    onClick={handleToggleDropdown}
+                  />
 
-                {isDropOpen && (
-                  <div className="flex flex-col min-w-40 absolute right-0 top-16 shadow-md md:-right-44 md:-top-2 bg-white">
-                    {!isSharedTaskList ? (
-                      <>
+                  {isDropOpen && (
+                    <div className="flex flex-col min-w-40 absolute right-0 top-16 shadow-md md:-right-44 md:-top-2 bg-white">
+                      {!isSharedTaskList ? (
+                        <>
+                          <Button
+                            text="Excluir lista"
+                            color="error"
+                            onClick={() => {
+                              setIsModalOpen(true);
+                            }}
+                          />
+                          <Button
+                            text="Compartilhar"
+                            color="lightNeutral"
+                            onClick={handleGetUsersToShare}
+                          />
+                        </>
+                      ) : (
                         <Button
-                          text="Excluir lista"
-                          color="error"
-                          onClick={() => {
-                            setIsModalOpen(true);
-                          }}
-                        />
-                        <Button
-                          text="Compartilhar"
+                          text="Deixar de seguir lista"
                           color="lightNeutral"
-                          onClick={handleGetUsersToShare}
+                          onClick={handleUnfollowTaskList}
                         />
-                      </>
-                    ) : (
-                      <Button
-                        text="Deixar de seguir lista"
-                        color="lightNeutral"
-                        onClick={handleUnfollowTaskList}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             {isSharedTaskList && (
               <div
