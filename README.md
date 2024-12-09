@@ -35,6 +35,7 @@
 ### Frontend:
 - **React.js**: para criação de uma interface interativa e dinâmica.
 - **TailwindCSS**: para estilização da interface, garantindo responsividade e usabilidade.
+- **ToastFy**: para uma melhor experiência com validações de suas ações!
 
 ### Backend:
 - **Node.js** com **Express**: para desenvolvimento da API RESTful.
