@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: "https://react-node-to-do-list-ws.onrender.com",
 });
 
 export default api;
