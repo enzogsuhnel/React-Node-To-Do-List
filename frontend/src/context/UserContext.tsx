@@ -136,6 +136,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             ? userData.confirmPassword?.trim()
             : undefined,
       });
+      setUser(userData);
       return response;
     } catch (error: any) {
       const errorMessage = error.response.data?.message || "Erro desconhecido.";
