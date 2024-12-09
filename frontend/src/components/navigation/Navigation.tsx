@@ -9,11 +9,14 @@ export default function Navigation() {
   if (!userContext) {
     return null;
   }
+  const [isDropProfileOpen, setIsDropProfileOpen] = useState(false);
   const { user, setMenuOpen, menuOpen, logoutUser } = userContext;
   const [userName, setUserName] = useState("");
   //Navigate
   const navigate = useNavigate();
-
+  const handleToggleDropdown = () => {
+    setIsDropProfileOpen(!isDropProfileOpen);
+  };
   const getUserName = () => {
     const fullName = user?.name?.split(" ");
     fullName &&
@@ -59,10 +62,14 @@ export default function Navigation() {
               </div>
               <h2 className="font-semibold">{userName}</h2>
               <div className="cursor-pointer hover:bg-teal-900 flex items-center justify-center rounded-full p-2  w-10 h-10">
-                <span className="material-symbols-outlined">more_vert</span>
+                <Button
+                startIcon="more_vert"
+                variant="text"
+                onClick={handleToggleDropdown}
+                />
               </div>
             </div>
-            <div className="flex flex-col w-44 absolute right-0 -bottom-20 shadow-md z-30 bg-neutral-300 rounded divide-y divide-neutral-300">
+            { isDropProfileOpen && (<div className="flex flex-col w-44 absolute right-0 -bottom-20 shadow-md z-30 bg-neutral-300 rounded divide-y divide-neutral-300">
               <Button
                 startIcon="person"
                 text="Editar perfil"
@@ -81,7 +88,7 @@ export default function Navigation() {
                   navigate("/login");
                 }}
               />
-            </div>
+            </div>)}
           </div>
         ) : (
           <div className="flex gap-8">

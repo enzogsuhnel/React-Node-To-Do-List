@@ -5,13 +5,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Modal from "../../components/modal/Modal";
 import { User, UserContext } from "../../context/UserContext";
 import { toast } from "react-toastify";
-import { log } from "console";
 
 export default function Tasks() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const taskList: TaskList = location.state?.taskList || null;
+  const [isDropOpen, setIsDropOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareTaskModalOpen, setIsShareTaskModalOpen] = useState(false);
   const [usersToShare, setUsersToShare] = useState<User[]>();
@@ -45,6 +45,7 @@ export default function Tasks() {
     shareTaskList,
     unshareTaskList,
     getSharedUsers,
+    unfollowTaskList,
   } = apiContext;
 
   const { user, getUsersToShare } = userContext;
@@ -71,8 +72,6 @@ export default function Tasks() {
         taskList._id,
         userIdToUnshare
       );
-      console.log(taskListUpdated);
-
       navigate("/task-list", { state: { taskList: taskListUpdated } });
       notifySuccess("Lista descompartilhada com sucesso!");
     } catch (error) {
@@ -83,7 +82,21 @@ export default function Tasks() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewTask(e.target.value);
   };
+  const handleToggleDropdown = () => {
+    setIsDropOpen(!isDropOpen);
+  };
+  const handleUnfollowTaskList = async () => {
+    try {
+      const taskListUnfollowed =
+        user && (await unfollowTaskList(taskList._id, taskList.userId._id));
 
+      navigate("/task-list", { state: { taskList: null } });
+      notifySuccess("Deixou de seguir lista com sucesso!");
+      return taskListUnfollowed;
+    } catch {
+      notifyError("Erro ao deixar de seguir lista!");
+    }
+  };
   const handleCreateTask = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (taskList) {
@@ -168,7 +181,6 @@ export default function Tasks() {
         taskList._id,
         selectedUsersToShare
       );
-      console.log("Share: ", taskListUpdated);
       if (taskListUpdated) {
         navigate("/task-list", { state: { taskList: taskListUpdated } });
       } else {
@@ -182,7 +194,6 @@ export default function Tasks() {
 
   const handleGetSharedUsers = async () => {
     const sharedUsers = await getSharedUsers(taskList._id);
-    console.log(sharedUsers);
 
     sharedUsers && setUsersShared(sharedUsers);
   };
@@ -191,7 +202,6 @@ export default function Tasks() {
     taskList && getTasksFromTaskList();
     setListTitle(taskList ? taskList.name : "");
     handleGetSharedUsers();
-    console.log(taskList);
   }, [taskList]);
 
   return (
@@ -220,38 +230,38 @@ export default function Tasks() {
                   }}
                 />
               )}
-              <Button
-                startIcon="more_vert"
-                variant="text"
-                onClick={() => {
-                  null;
-                }}
-              />
+              <div className="relative">
+                <Button
+                  startIcon="more_vert"
+                  variant="text"
+                  onClick={handleToggleDropdown}
+                />
 
-              <div className="flex flex-col min-w-40 absolute right-0 top-16 shadow-md md:-right-44 md:-top-2 ">
-                {!isSharedTaskList ? (
-                  <>
-                    <Button
-                      text="Excluir lista"
-                      color="error"
-                      onClick={() => {
-                        setIsModalOpen(true);
-                      }}
-                    />
-                    <Button
-                      text="Compartilhar"
-                      color="lightNeutral"
-                      onClick={handleGetUsersToShare}
-                    />
-                  </>
-                ) : (
-                  <Button
-                    text="Deixar de seguir lista"
-                    color="lightNeutral"
-                    onClick={() => {
-                      null;
-                    }}
-                  />
+                {isDropOpen && (
+                  <div className="flex flex-col min-w-40 absolute right-0 top-16 shadow-md md:-right-44 md:-top-2 bg-white">
+                    {!isSharedTaskList ? (
+                      <>
+                        <Button
+                          text="Excluir lista"
+                          color="error"
+                          onClick={() => {
+                            setIsModalOpen(true);
+                          }}
+                        />
+                        <Button
+                          text="Compartilhar"
+                          color="lightNeutral"
+                          onClick={handleGetUsersToShare}
+                        />
+                      </>
+                    ) : (
+                      <Button
+                        text="Deixar de seguir lista"
+                        color="lightNeutral"
+                        onClick={handleUnfollowTaskList}
+                      />
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -358,9 +368,11 @@ export default function Tasks() {
         <div className="bg-container lg:w-[30%] lg:max-w-[450px] w-full ml-4 rounded-xl p-8">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-medium">Compartilhado com:</h2>
-            <span className="material-symbols-outlined cursor-pointer hover:text-neutral-300">
-              share
-            </span>
+            <Button
+              endIcon="share"
+              variant="text"
+              onClick={handleGetUsersToShare}
+            />
           </div>
           <div className="mt-8 flex flex-col gap-2">
             {usersShared?.map((user, index) => (

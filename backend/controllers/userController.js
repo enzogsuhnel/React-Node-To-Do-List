@@ -106,7 +106,6 @@ const updateUser = async (req, res) => {
       const passwordHash = await bcrypt.hash(update.password, salt);
       update.password = passwordHash;
       delete update.confirmPassword;
-      console.log(update);
     }
     const updatedUser = await User.findByIdAndUpdate(id, update, {
       new: true,

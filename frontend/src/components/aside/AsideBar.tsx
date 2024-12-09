@@ -8,10 +8,17 @@ import useClickOutside from "../../hooks/useClickOutside";
 export default function AsideBar() {
   const [openMenu, setOpenMenu] = useState(true);
   const [taskLists, setTaskLists] = useState<TaskList[] | undefined>(undefined);
+  const [isDropTasklistOpen, setIsDropTasklistOpen] = useState(false);
+  const [isDropSharedOpen, setIsDropSharedOpen] = useState(false);
   const [taskListsShared, setTaskListsShared] = useState<
     TaskList[] | undefined
   >(undefined);
-
+  const handleTasklistToggleDropdown = () => {
+    setIsDropTasklistOpen(!isDropTasklistOpen);
+  };
+  const handleSharedToggleDropdown = () => {
+    setIsDropSharedOpen(!isDropSharedOpen);
+  };
   const options = [
     {
       name: "Minhas listas",
@@ -84,7 +91,6 @@ export default function AsideBar() {
           <div className="flex flex-col text-white" key={index}>
             <div
               className={`flex justify-start items-center w-fit gap-4 cursor-pointer`}
-              onClick={() => el.route ? navigate(el.route) : null}
             >
               <div
                 className={`p-2  rounded flex items-center justify-center ${
@@ -96,15 +102,22 @@ export default function AsideBar() {
               {menuOpen && (
                 <label className={` cursor-pointer flex gap-6 items-center`}>
                   {el.name}
-                  {el.subItems && (
-                    <span className="material-symbols-outlined cursor-pointer hover:text-neutral-300">
-                      keyboard_arrow_up
-                    </span>
+                  {el.subItems && el.subItems.length > 0 && (
+                    <Button
+                      startIcon={
+                        isDropTasklistOpen
+                          ? "keyboard_arrow_up"
+                          : "keyboard_arrow_down"
+                      }
+                      variant="text"
+                      onClick={handleTasklistToggleDropdown}
+                    />
                   )}
                 </label>
               )}
             </div>
             {menuOpen &&
+              isDropTasklistOpen &&
               el.subItems?.map((subItem, index) => (
                 <div
                   key={index}

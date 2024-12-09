@@ -34,13 +34,11 @@ export default function Register() {
   const handleRegister = async (e: any) => {
     e.preventDefault();
     if (!inputError) {
-      console.log(userData);
       if (userData.password !== userData.confirmPassword) {
         setMessage("As senhas não conferem!");
       } else {
         try {
           const response = await registerUser(userData);
-          console.log(response);
           setMessage(response.data.msg);
           navigate("/login");
         } catch (error: any) {

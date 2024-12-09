@@ -9,6 +9,7 @@ router.post("/", taskListController.createList);
 router.post("/share/:id", taskListController.shareTaskList);
 router.get("/share/:id", taskListController.getSharedUsers);
 router.patch("/unshare/:id", taskListController.unshareTaskList);
+router.patch("/unfollow/:id", taskListController.unfollowTaskList);
 router.delete("/:id", taskListController.deleteTaskList);
 router.get("/", taskListController.getLists);
 router.get("/shared", taskListController.getTaskListsShared);

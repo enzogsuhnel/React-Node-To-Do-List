@@ -26,7 +26,9 @@ const getTaskListsShared = async (req, res) => {
 
   try {
     // Buscar listas onde o usuário está no array sharedWith
-    const sharedTaskLists = await TaskList.find({ sharedWith: userId })
+    const sharedTaskLists = await TaskList.find({
+      sharedWith: { $elemMatch: { $eq: userId } },
+    })
       .populate("userId", "name email") // Opcional: Popula dados do proprietário
       .exec();
 
@@ -114,7 +116,7 @@ const shareTaskList = async (req, res) => {
     if (!taskList) {
       return res
         .status(404)
-        .json({ message: "TaskList not found or unauthorized" });
+        .json({ message: "Lista não encontrada ou acesso não autorizado." });
     }
 
     // Filtrar apenas os usuários que ainda não estão na lista `sharedWith`
@@ -123,7 +125,9 @@ const shareTaskList = async (req, res) => {
     );
 
     if (newUserIds.length === 0) {
-      return res.status(404).json({ message: "No new users to share with" });
+      return res
+        .status(404)
+        .json({ message: "Nenhum usuário para compartilhar." });
     }
 
     // Atualizar a lista com os novos usuários
@@ -131,12 +135,12 @@ const shareTaskList = async (req, res) => {
     await taskList.save();
 
     res.status(200).json({
-      message: "TaskList shared successfully",
+      message: "Lista compartilhada com sucesso!",
       sharedWith: taskList.sharedWith,
       taskList: taskList,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error sharing TaskList", error });
+    res.status(500).json({ message: "Erro ao compartilhar lista!", error });
   }
 };
 
@@ -153,13 +157,15 @@ const getSharedUsers = async (req, res) => {
     if (!taskList) {
       return res
         .status(404)
-        .json({ message: "TaskList not found or unauthorized" });
+        .json({ message: "Lista não encontrada ou acesso não autorizado." });
     }
 
     // Retornar a lista de usuários com quem a TaskList está compartilhada
     res.status(200).json({ sharedWith: taskList.sharedWith });
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving shared users", error });
+    res
+      .status(500)
+      .json({ message: "Erro ao buscar usuários compartilhados.", error });
   }
 };
 
@@ -169,18 +175,23 @@ const unshareTaskList = async (req, res) => {
   const userId = req.user.id; // ID do usuário autenticado
 
   try {
-    const taskList = await TaskList.findOne({ _id: id, userId });
+    const taskList = await TaskList.findOne({
+      _id: id,
+      userId,
+      sharedWith: { $elemMatch: { $eq: userIdToRemove } },
+    });
+
     if (!taskList) {
       return res
         .status(404)
-        .json({ message: "TaskList not found or unauthorized" });
+        .json({ message: "Lista não encontrada ou acesso não autorizado." });
     }
 
     // Verificar se o usuário está na lista compartilhada
     if (!taskList.sharedWith.includes(userIdToRemove)) {
       return res
         .status(400)
-        .json({ message: "User is not in shared list" });
+        .json({ message: "Lista não está compartilhada com este usuário." });
     }
 
     // Remover o usuário da lista `sharedWith`
@@ -191,12 +202,54 @@ const unshareTaskList = async (req, res) => {
     await taskList.save();
 
     res.status(200).json({
-      message: "User removed from shared list",
+      message: "Usuário removido da lista de compartilhados.",
       sharedWith: taskList.sharedWith,
       taskList: taskList,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error unsharing TaskList", error });
+    res.status(500).json({ message: "Erro ao descompartilhar.", error });
+  }
+};
+
+const unfollowTaskList = async (req, res) => {
+  const { id } = req.params; // ID da taskList
+  const { ownerUserId } = req.body; // ID do usuário a ser removido
+  const userId = req.user.id; // ID do usuário autenticado
+
+  try {
+    const taskList = await TaskList.findOne({
+      _id: id,
+      userId: ownerUserId,
+      sharedWith: { $elemMatch: { $eq: userId } },
+    });
+
+    if (!taskList) {
+      return res
+        .status(404)
+        .json({ message: "Lista não encontrada ou acesso não autorizado." });
+    }
+
+    // Verificar se o usuário está na lista compartilhada
+    if (!taskList.sharedWith.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "Lista não está compartilhada com este usuário." });
+    }
+
+    // Remover o usuário da lista `sharedWith`
+    taskList.sharedWith = taskList.sharedWith.filter(
+      (id) => id.toString() !== userId
+    );
+
+    await taskList.save();
+
+    res.status(200).json({
+      message: "Usuário removido da lista de compartilhados.",
+      sharedWith: taskList.sharedWith,
+      taskList: taskList,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao descompartilhar.", error });
   }
 };
 
@@ -209,4 +262,5 @@ export default {
   shareTaskList,
   unshareTaskList,
   getSharedUsers,
+  unfollowTaskList,
 };

@@ -41,10 +41,8 @@ export default function Profile() {
   };
 
   const handleDeleteUser = async () => {
-    console.log("Entrei na Função Handle");
     try {
       const response = userInfo && (await deleteUser(userInfo?._id));
-      console.log(response);
       navigate("/login");
       return response;
     } catch (error: any) {

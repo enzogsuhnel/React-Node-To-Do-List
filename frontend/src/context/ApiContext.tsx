@@ -46,6 +46,10 @@ interface ApiContextType {
     taskListId: string,
     userIdToRemove: string
   ) => Promise<TaskList | undefined>;
+  unfollowTaskList: (
+    taskListId: string,
+    ownerUserId: string
+  ) => Promise<TaskList | undefined>;
   updateTaskList: (
     taskList: TaskListParams,
     taskListId: string
@@ -62,12 +66,6 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 
   api.interceptors.request.use((config) => {
     const token = sessionStorage.getItem("token");
-    console.log(
-      "peguei o token: ",
-      token && JSON.parse(token),
-      sessionStorage.getItem("user")
-    );
-
     if (token) {
       config.headers.Authorization = `Bearer ${JSON.parse(token)}`;
     }
@@ -126,6 +124,17 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await api.patch(`task-list/unshare/${taskListId}`, {
         userIdToRemove: userIdToRemove,
+      });
+      setRequest("update");
+      return (await response.data.taskList) as TaskList;
+    } catch (error: any) {}
+  };
+
+  const unfollowTaskList = async (taskListId: string, ownerUserId: string) => {
+    try {
+
+      const response = await api.patch(`task-list/unfollow/${taskListId}`, {
+        ownerUserId: ownerUserId,
       });
       setRequest("update");
       return (await response.data.taskList) as TaskList;
@@ -203,6 +212,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
         getTaskListsShared,
         shareTaskList,
         unshareTaskList,
+        unfollowTaskList,
         getSharedUsers,
         getTasks,
         postTask,

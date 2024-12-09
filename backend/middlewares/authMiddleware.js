@@ -10,7 +10,6 @@ const checkToken = (req, res, next) => {
     const secret = process.env.SECRET;
     const decoded = jwt.verify(token, secret);
     req.user = { id: decoded.id };
-    console.log(req);
     next();
   } catch (error) {
     res.status(401).json({ msg: "Token inválido!" });

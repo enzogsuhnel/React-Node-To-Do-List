@@ -110,12 +110,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const getSessionUser = () => user;
   const deleteUser = async (userId: string) => {
-    console.log("Entrei na Função Context");
     try {
       //o erro ta antes do res
       const response = await api.delete(`/user/${userId}`);
       logoutUser();
-      console.log(response);
       return response;
     } catch (error: any) {
       const errorMessage = error.response.data?.message || "Erro desconhecido.";
@@ -125,8 +123,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
   const updateUser = async (userData: UserUpdateParams, userId: string) => {
     try {
-      console.log("Update");
-
       const response = await api.patch(`/user/${userId}`, {
         name: userData.name?.trim() != "" ? userData.name?.trim() : undefined,
         email:
@@ -143,7 +139,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       return response;
     } catch (error: any) {
       const errorMessage = error.response.data?.message || "Erro desconhecido.";
-      console.log("erro: ", error);
       return Promise.reject(new Error(errorMessage));
     }
   };
