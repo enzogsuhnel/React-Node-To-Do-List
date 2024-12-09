@@ -5,7 +5,7 @@
 - Enzo Guidi Suhnel (23200517)
 
 ## Descrição do Projeto
-Este é um projeto completo de uma aplicação web de lista de tarefas (**to-do list**), desenvolvida com o objetivo de prática e aprendizado em desenvolvimento full-stack. A aplicação permite aos usuários criar, editar, marcar como concluídas e excluir tarefas de maneira simples e intuitiva. Foi projetada para ser responsiva e funcional em dispositivos de diferentes tamanhos.
+**Enzo's List** é um projeto completo de uma aplicação web de lista de tarefas (**to-do list**), desenvolvida com o objetivo de prática e aprendizado em desenvolvimento full-stack. A aplicação permite aos usuários criar, editar, marcar como concluídas e excluir tarefas de maneira simples e intuitiva. Foi projetada para ser responsiva e funcional em dispositivos de diferentes tamanhos.
 
 ---
 
@@ -15,9 +15,10 @@ Este é um projeto completo de uma aplicação web de lista de tarefas (**to-do 
   - Sessão protegida para garantir que apenas usuários autenticados possam acessar as funcionalidades principais.
 
 - **Gerenciamento de Tarefas**:
-  - Criar novas tarefas com título e descrição.
+  - Criar novas tarefas com descrição.
   - Atualizar o status de uma tarefa (ex: marcá-la como concluída ou pendente).
-  - Editar ou excluir tarefas existentes.
+  - Excluir tarefas concluidas.
+  - Compartilhar lista de tarefas com outros usuários.
 
 - **Interface de Usuário Intuitiva**:
   - Design responsivo para desktop e dispositivos móveis.
