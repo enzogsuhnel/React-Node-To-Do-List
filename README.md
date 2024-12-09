@@ -33,7 +33,7 @@ Este é um projeto completo de uma aplicação web de lista de tarefas (**to-do 
 
 ### Frontend:
 - **React.js**: para criação de uma interface interativa e dinâmica.
-- **CSS Customizado**: para estilização da interface, garantindo responsividade e usabilidade.
+- **TailwindCSS**: para estilização da interface, garantindo responsividade e usabilidade.
 
 ### Backend:
 - **Node.js** com **Express**: para desenvolvimento da API RESTful.
@@ -50,53 +50,11 @@ Este é um projeto completo de uma aplicação web de lista de tarefas (**to-do 
 
 ---
 
-## Instalação e Execução Local
+## Visualização e utilizalção:
 
-1. Clone este repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/todo-list.git
-   ```
-
-2. Instale as dependências:
-   ```bash
-   cd todo-list
-   npm install
-   ```
-
-3. Configure as variáveis de ambiente:
-   - Crie um arquivo `.env` na raiz do projeto e adicione as seguintes variáveis:
-     ```env
-     MONGO_URI= sua_url_do_mongodb
-     JWT_SECRET= sua_chave_secreta
-     PORT=3000
-     ```
-
-4. Inicie a aplicação:
-   - Para ambiente de desenvolvimento:
-     ```bash
-     npm start
-     ```
-
-   - Para criar uma build de produção:
-     ```bash
-     npm run build
-     ```
-
-5. Acesse a aplicação no navegador:
-   - Frontend: `http://localhost:3000`
-   - API: `http://localhost:3000/api`
-
----
-
-## Estrutura do Projeto
-```
-raiz do projeto
-├── frontend/       # Código do cliente React
-├── backend/        # API com Express
-├── .env            # Configuração de variáveis de ambiente (não incluído no Git)
-├── package.json   # Dependências do projeto
-└── README.md       # Documentação do projeto
-```
+- **Você pode rodar este projeto em:** 
+- https://react-node-to-do-list.onrender.com/
+- **Ou pode fazer um clone e rodar localmente!**
 
 ---
 
@@ -105,6 +63,7 @@ raiz do projeto
 - Adicionar filtros e categorias para organização de tarefas.
 - Melhorar a interface com animações e transições.
 - Suporte para múltiplos idiomas.
+- Suporte á temas (light/dark)
 
 ---
 
