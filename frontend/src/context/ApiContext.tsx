@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useState } from "react";
 import api from "../services/api.js";
+import { User } from "./UserContext.js";
 
 export interface Task {
   _id: string;
@@ -16,8 +17,13 @@ export interface TaskParams {
 
 export interface TaskList {
   _id: string;
-  userId: string;
+  userId: {
+    _id: string;
+    name: string;
+    email: string;
+  };
   name: string;
+  sharedWith: string[];
 }
 
 export interface TaskListParams {
@@ -27,17 +33,24 @@ export interface TaskListParams {
 interface ApiContextType {
   request: string | null;
   getTaskLists: () => Promise<TaskList[] | undefined>;
+  getTaskListsShared: () => Promise<TaskList[] | undefined>;
   getTasks: (taskListId: string) => Promise<Task[] | undefined>;
   postTask: (taskData: TaskParams) => any;
   postTaskList: (taskList: TaskListParams) => Promise<TaskList | undefined>;
+  shareTaskList: (
+    taskListId: string,
+    userIdsToShare: string[]
+  ) => Promise<TaskList | undefined>;
+  getSharedUsers: (taskListId: string) => Promise<User[] | undefined>;
+  unshareTaskList: (
+    taskListId: string,
+    userIdToRemove: string
+  ) => Promise<TaskList | undefined>;
   updateTaskList: (
     taskList: TaskListParams,
     taskListId: string
   ) => Promise<TaskList | undefined>;
-  updateTask: (
-    task: TaskParams,
-    taskId: string
-  ) => Promise<TaskList | undefined>;
+  updateTask: (task: TaskParams, taskId: string) => Promise<Task | undefined>;
   deleteTask: (taskId: string) => Promise<Task | undefined>;
   deleteTaskList: (taskListId: string) => Promise<TaskList | undefined>;
 }
@@ -69,11 +82,53 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
     } catch (error: any) {}
   };
 
+  const getTaskListsShared = async () => {
+    try {
+      const response = await api.get("/task-list/shared");
+      setRequest("get");
+      return (await response.data) as TaskList[];
+    } catch (error: any) {}
+  };
+
   const postTaskList = async (taskListData: TaskListParams) => {
     try {
       const response = await api.post("/task-list/", taskListData);
       setRequest("update");
       return (await response.data) as TaskList;
+    } catch (error: any) {}
+  };
+
+  const shareTaskList = async (
+    taskListId: string,
+    userIdsToShare: string[]
+  ) => {
+    try {
+      const response = await api.post(`/task-list/share/${taskListId}`, {
+        userIds: userIdsToShare,
+      });
+      setRequest("update");
+      return (await response.data.taskList) as TaskList;
+    } catch (error: any) {}
+  };
+
+  const getSharedUsers = async (taskListId: string) => {
+    try {
+      const response = await api.get(`/task-list/share/${taskListId}`);
+      setRequest("update");
+      return (await response.data.sharedWith) as User[];
+    } catch (error: any) {}
+  };
+
+  const unshareTaskList = async (
+    taskListId: string,
+    userIdToRemove: string
+  ) => {
+    try {
+      const response = await api.patch(`task-list/unshare/${taskListId}`, {
+        userIdToRemove: userIdToRemove,
+      });
+      setRequest("update");
+      return (await response.data.taskList) as TaskList;
     } catch (error: any) {}
   };
 
@@ -106,16 +161,18 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
     } catch (error: any) {}
   };
 
-  const updateTask = async (
-    taskData: TaskParams,
-    taskId: string
-  ) => {
+  const updateTask = async (taskData: TaskParams, taskId: string) => {
     try {
-      const response = await api.patch(
-        `/task/${taskId}`,
-        taskData
-      );
-      return await response.data;
+      const response = await api.patch(`/task/${taskId}`, {
+        taskListId:
+          taskData.taskListId?.trim() != ""
+            ? taskData.taskListId?.trim()
+            : undefined,
+        tittle:
+          taskData.title?.trim() != "" ? taskData.title?.trim() : undefined,
+        isCompleted: taskData.isCompleted,
+      });
+      return response.data;
     } catch (error: any) {}
   };
 
@@ -143,6 +200,10 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
       value={{
         request,
         getTaskLists,
+        getTaskListsShared,
+        shareTaskList,
+        unshareTaskList,
+        getSharedUsers,
         getTasks,
         postTask,
         deleteTask,

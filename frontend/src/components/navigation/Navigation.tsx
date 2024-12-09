@@ -24,7 +24,6 @@ export default function Navigation() {
 
   useEffect(() => {
     getUserName();
-    console.log("Nav user: ", user?.name);
   }, [user]);
 
   return (

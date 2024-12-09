@@ -1,6 +1,18 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import TaskList from "../models/TaskList.js";
+
+const getUsersToShare = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const users = await User.find({ _id: { $ne: userId } }).select("-password");
+
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Erro ao buscar usuários", error: err });
+  }
+};
 
 // Registro de usuário
 const registerUser = async (req, res) => {
@@ -84,10 +96,21 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   const id = req.user.id;
   const update = req.body;
+
   try {
+    if (update.password && update.confirmPassword) {
+      if (update.password !== update.confirmPassword)
+        return res.status(422).json({ msg: "As senhas não coincidem!" });
+
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(update.password, salt);
+      update.password = passwordHash;
+      delete update.confirmPassword;
+      console.log(update);
+    }
     const updatedUser = await User.findByIdAndUpdate(id, update, {
-      new: true, // Retorna a lista atualizada
-      runValidators: true, // Valida os dados antes de atualizar
+      new: true,
+      runValidators: true,
     });
 
     res.status(200).json({
@@ -95,9 +118,10 @@ const updateUser = async (req, res) => {
       user: updatedUser,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erro ao atualizar suas informações.", error });
+    res.status(500).json({
+      message: "Erro ao atualizar suas informações.",
+      error: error.message,
+    });
   }
 };
 
@@ -107,7 +131,6 @@ const deleteUser = async (req, res) => {
 
   try {
     const user = await User.findById(id);
-    //Fazer get para apenas uma lista?
     if (!user) {
       return res.status(404).json({ message: "Usuário não está logado." });
     }
@@ -119,6 +142,7 @@ const deleteUser = async (req, res) => {
     }
 
     // Deleta todas as tarefas associadas à lista
+    await TaskList.deleteMany({ userId: id });
     await user.deleteOne();
 
     res.status(200).json({
@@ -128,4 +152,11 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Erro ao deletar a conta.", error });
   }
 };
-export default { loginUser, registerUser, getUserById, updateUser, deleteUser };
+export default {
+  getUsersToShare,
+  loginUser,
+  registerUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+};

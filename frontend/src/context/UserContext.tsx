@@ -32,6 +32,7 @@ interface UserContextType {
   logoutUser: () => void;
   deleteUser: (userId: string) => any;
   getUserById: (userId: string) => any;
+  getUsersToShare: () => any;
   getSessionUser: () => string | null;
   registerUser: (userData: UserParams) => any;
   updateUser: (userData: UserUpdateParams, userId: string) => any;
@@ -53,6 +54,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeRoute, setActiveRoute] = useState("/");
+
+  const getUsersToShare = async () => {
+    try {
+      const response = await api.get("/user/share");
+      return (await response.data) as User[];
+    } catch (error: any) {}
+  };
 
   const loginUser = async (userData: UserLogin) => {
     try {
@@ -111,6 +119,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       return response;
     } catch (error: any) {
       const errorMessage = error.response.data?.message || "Erro desconhecido.";
+
       return Promise.reject(new Error(errorMessage));
     }
   };
@@ -131,8 +140,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             ? userData.confirmPassword?.trim()
             : undefined,
       });
-      console.log("response: ", response);
-
       return response;
     } catch (error: any) {
       const errorMessage = error.response.data?.message || "Erro desconhecido.";
@@ -147,6 +154,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         loginUser,
         logoutUser,
         getUserById,
+        getUsersToShare,
         deleteUser,
         getSessionUser,
         registerUser,
