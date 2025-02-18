@@ -272,6 +272,7 @@ export default function Tasks() {
                       }
                       onClose={() => setIsDropOpen(false)}
                       closeIconId="drop-task-list"
+                      customPosition="right"
                     />
                   )}
                 </div>

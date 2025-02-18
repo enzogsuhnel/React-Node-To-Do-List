@@ -93,12 +93,37 @@ export default function Navigation() {
               </div>
             </div>
             {isDropProfileOpen && (
+<<<<<<< HEAD
               <Drop
                 options={options}
                 onClose={() => setIsDropProfileOpen(false)}
                 closeIconId="drop-navbar"
                 position="leftBottom"
               />
+=======
+              <div className="flex flex-col w-44 absolute right-0 -bottom-20 shadow-md z-30 bg-neutral-300 rounded divide-y divide-neutral-300">
+                <Button
+                  startIcon="person"
+                  text="Editar perfil"
+                  color="lightNeutral"
+                  onClick={() => {
+                    navigate("/profile");
+                    setIsDropProfileOpen(false);
+                  }}
+                />
+                <Button
+                  startIcon="logout"
+                  text="Sair"
+                  textColor="error"
+                  color="lightNeutral"
+                  onClick={() => {
+                    logoutUser();
+                    setIsDropProfileOpen(false);
+                    navigate("/login");
+                  }}
+                />
+              </div>
+>>>>>>> f5d8ff3a9016cd2e51b6cc59bad65d6545b025f9
             )}
           </div>
         ) : (
