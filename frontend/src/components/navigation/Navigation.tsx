@@ -77,6 +77,7 @@ export default function Navigation() {
                   color="lightNeutral"
                   onClick={() => {
                     navigate("/profile");
+                    setIsDropProfileOpen(false);
                   }}
                 />
                 <Button
@@ -86,6 +87,7 @@ export default function Navigation() {
                   color="lightNeutral"
                   onClick={() => {
                     logoutUser();
+                    setIsDropProfileOpen(false);
                     navigate("/login");
                   }}
                 />
