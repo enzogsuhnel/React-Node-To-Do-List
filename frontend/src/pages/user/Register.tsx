@@ -6,6 +6,7 @@ import api from "../../services/api";
 import Hero from "../../components/hero/Hero";
 import InputErrorMessage from "../../components/input/InputErrorMessage";
 import { UserContext, UserParams } from "../../context/UserContext";
+import { toast } from "react-toastify";
 
 export default function Register() {
   const [userData, setUserData] = useState<UserParams>({
@@ -22,6 +23,9 @@ export default function Register() {
   const [message, setMessage] = useState("");
   const [inputError, setInputError] = useState(false);
   const navigate = useNavigate();
+
+  const notifySuccess = (msg: string) => toast.success(msg);
+  const notifyError = (msg: string) => toast.error(msg);
 
   const handleChange = (e: any) => {
     setUserData({
@@ -40,8 +44,10 @@ export default function Register() {
         try {
           const response = await registerUser(userData);
           setMessage(response.data.msg);
+          notifySuccess("Usuário registrado com sucesso!");
           navigate("/login");
         } catch (error: any) {
+          notifyError("Erro ao cadastrar-se.");
           setMessage(error.response?.data?.msg || "Erro ao cadastrar");
         }
       }

@@ -34,7 +34,8 @@ export default function Profile() {
   const navigate = useNavigate();
 
   const handleChange = (e: any) => {
-    setUserData({
+    
+      setUserData({
       ...userData,
       [e.target.name]: e.target.value,
     });

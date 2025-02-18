@@ -1,9 +1,10 @@
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 import Button from "../button/Button";
+import useClickOutside from "../../hooks/useClickOutside";
 
 type ModalProps = {
   isOpen: boolean;
-  onClose?: () => void;
+  onClose: () => void;
   onConfirm?: () => void;
   message: string | ReactNode;
   effectMessage?: string;
@@ -25,10 +26,15 @@ export default function Modal({
   color,
 }: ModalProps) {
   if (!isOpen) return null;
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useClickOutside(modalRef, onClose, undefined, undefined);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-gray-800 text-lg">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-gray-800 text-lg"
+      >
         {message}
         <p className="text-red-700 text-md">{effectMessage}</p>
         {onClose && onConfirm && (

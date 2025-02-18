@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Modal from "../../components/modal/Modal";
 import { User, UserContext } from "../../context/UserContext";
 import { toast } from "react-toastify";
+import Drop, { OptionProps } from "../../components/drop/Drop";
 
 export default function Tasks() {
   const location = useLocation();
@@ -60,12 +61,36 @@ export default function Tasks() {
     setTasks(tasks);
   };
 
+  //Options for Drops
+  const optionsForSharedTaskList: OptionProps[] = [
+    {
+      text: "Deixar de seguir lista",
+      onClick: () => handleUnfollowTaskList,
+      color: "lightNeutral",
+    },
+  ];
+  const options: OptionProps[] = [
+    {
+      text: "Excluir Lista",
+      onClick: () => {
+        setIsModalOpen(true);
+      },
+      color: "error",
+    },
+    {
+      text: "Compartilhar",
+      onClick: () => {
+        handleGetUsersToShare();
+      },
+      color: "lightNeutral",
+    },
+  ];
+
   const handleGetUsersToShare = async () => {
     const usersToShare = await getUsersToShare();
     setUsersToShare(usersToShare);
     setIsShareTaskModalOpen(true);
   };
-
   const handleUnshareTaskList = async (userIdToUnshare: string) => {
     try {
       const taskListUpdated = await unshareTaskList(
@@ -155,6 +180,7 @@ export default function Tasks() {
   };
 
   const handleDeleteTaskList = async () => {
+    console.log("Deletei ", taskList._id);
     deleteTaskList(taskList._id);
     setTasks(undefined);
 
@@ -193,9 +219,11 @@ export default function Tasks() {
   };
 
   const handleGetSharedUsers = async () => {
-    const sharedUsers = await getSharedUsers(taskList._id);
+    if (taskList != null) {
+      const sharedUsers = await getSharedUsers(taskList._id);
 
-    sharedUsers && setUsersShared(sharedUsers);
+      sharedUsers && setUsersShared(sharedUsers);
+    }
   };
 
   useEffect(() => {
@@ -231,38 +259,20 @@ export default function Tasks() {
                 />
               )}
               {taskList && (
-                <div className="relative">
+                <div id="drop-task-list" className="relative">
                   <Button
                     startIcon="more_vert"
                     variant="text"
                     onClick={handleToggleDropdown}
                   />
-
                   {isDropOpen && (
-                    <div className="flex flex-col min-w-40 absolute right-0 top-16 shadow-md md:-right-44 md:-top-2 bg-white">
-                      {!isSharedTaskList ? (
-                        <>
-                          <Button
-                            text="Excluir lista"
-                            color="error"
-                            onClick={() => {
-                              setIsModalOpen(true);
-                            }}
-                          />
-                          <Button
-                            text="Compartilhar"
-                            color="lightNeutral"
-                            onClick={handleGetUsersToShare}
-                          />
-                        </>
-                      ) : (
-                        <Button
-                          text="Deixar de seguir lista"
-                          color="lightNeutral"
-                          onClick={handleUnfollowTaskList}
-                        />
-                      )}
-                    </div>
+                    <Drop
+                      options={
+                        !isSharedTaskList ? options : optionsForSharedTaskList
+                      }
+                      onClose={() => setIsDropOpen(false)}
+                      closeIconId="drop-task-list"
+                    />
                   )}
                 </div>
               )}
@@ -415,6 +425,7 @@ export default function Tasks() {
         <Modal
           isOpen={isShareTaskModalOpen}
           color="primary"
+          onClose={() => setIsShareTaskModalOpen(false)}
           message={
             <div>
               <form onSubmit={handleSubmit}>

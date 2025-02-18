@@ -110,11 +110,13 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getSharedUsers = async (taskListId: string) => {
-    try {
-      const response = await api.get(`/task-list/share/${taskListId}`);
-      setRequest("update");
-      return (await response.data.sharedWith) as User[];
-    } catch (error: any) {}
+    if (taskListId) {
+      try {
+        const response = await api.get(`/task-list/share/${taskListId}`);
+        setRequest("update");
+        return (await response.data.sharedWith) as User[];
+      } catch (error: any) {}
+    }
   };
 
   const unshareTaskList = async (
@@ -132,7 +134,6 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 
   const unfollowTaskList = async (taskListId: string, ownerUserId: string) => {
     try {
-
       const response = await api.patch(`task-list/unfollow/${taskListId}`, {
         ownerUserId: ownerUserId,
       });
@@ -157,6 +158,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
   const deleteTaskList = async (taskListId: string) => {
     try {
       const response = await api.delete(`/task-list/${taskListId}`);
+      console.log(response);
       setRequest("update");
       return (await response.data) as TaskList;
     } catch (error: any) {}

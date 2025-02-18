@@ -5,6 +5,7 @@ import Button from "../../components/button/Button";
 import { UserContext, UserLogin } from "../../context/UserContext";
 import Hero from "../../components/hero/Hero";
 import InputErrorMessage from "../../components/input/InputErrorMessage";
+import { toast } from "react-toastify";
 import api from "../../services/api";
 
 export default function Login() {
@@ -20,6 +21,9 @@ export default function Login() {
     return null;
   }
 
+  const notifySuccess = (msg: string) => toast.success(msg);
+  const notifyError = (msg: string) => toast.error(msg);
+
   const { loginUser } = userContext;
 
   //Navigate
@@ -32,7 +36,7 @@ export default function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    e.target.value.trim() == "" && setInputError(true)
+    e.target.value.trim() == "" && setInputError(true);
   };
 
   const handleLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -41,13 +45,13 @@ export default function Login() {
     if (!inputError) {
       try {
         await loginUser(formData);
+        notifySuccess("Login efetuado com sucesso!");
         navigate("/task-list");
       } catch (error: any) {
-        setMessage("Erro ao fazer login. Tente novamente!");
+        notifyError("Erro ao fazer login.-");
       }
     }
   };
-
 
   return (
     <Hero>
@@ -72,11 +76,21 @@ export default function Login() {
             value={formData.password}
             onChange={handleChange}
           />
-          {inputError && formData.password.trim() == "" && <InputErrorMessage />}
+          {inputError && formData.password.trim() == "" && (
+            <InputErrorMessage />
+          )}
           {message && <p className="text-red-700">{message}</p>}
         </div>
         <Button type="submit" text="Entrar" />
-        <p className="text-sm text-center">Não é cadastrado? <a href="/register" className="text-orange-500 hover:border-b hover:border-orange-500">Cadastrar-se</a></p>
+        <p className="text-sm text-center">
+          Não é cadastrado?{" "}
+          <a
+            href="/register"
+            className="text-orange-500 hover:border-b hover:border-orange-500"
+          >
+            Cadastrar-se
+          </a>
+        </p>
       </form>
     </Hero>
   );
